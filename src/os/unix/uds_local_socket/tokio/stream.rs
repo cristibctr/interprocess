@@ -89,7 +89,7 @@ multimacro! {
     pinproj_for_unpin(UnixStream),
     forward_rbv(UnixStream, &),
     forward_tokio_rw,
-    forward_as_handle(unix),
+    forward_as_handle,
     derive_trivial_conv(UnixStream),
 }
 impl AsyncRead for &Stream {

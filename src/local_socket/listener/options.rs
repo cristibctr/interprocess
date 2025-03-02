@@ -16,7 +16,7 @@ pub struct ListenerOptions<'n> {
     pub(crate) name: Name<'n>,
     pub(crate) nonblocking: ListenerNonblockingMode,
     pub(crate) reclaim_name: bool,
-    #[cfg(unix)]
+    #[cfg(any(unix, target_vendor = "wasmer"))]
     pub(crate) mode: Option<libc::mode_t>,
     #[cfg(windows)]
     pub(crate) security_descriptor: Option<SecurityDescriptor>,
@@ -29,7 +29,7 @@ impl TryClone for ListenerOptions<'_> {
             name: self.name.clone(),
             nonblocking: self.nonblocking,
             reclaim_name: self.reclaim_name,
-            #[cfg(unix)]
+            #[cfg(any(unix, target_vendor = "wasmer"))]
             mode: self.mode,
             #[cfg(windows)]
             security_descriptor: self
@@ -50,7 +50,7 @@ impl ListenerOptions<'_> {
             name: Name::invalid(),
             nonblocking: ListenerNonblockingMode::Neither,
             reclaim_name: true,
-            #[cfg(unix)]
+            #[cfg(any(unix, target_vendor = "wasmer"))]
             mode: None,
             #[cfg(windows)]
             security_descriptor: None,

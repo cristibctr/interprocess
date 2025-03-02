@@ -6,7 +6,7 @@ macro_rules! impmod {
         impmod!($($osmod)::+, self $(as $into)?);
     };
     ($($osmod:ident)::+, $($orig:ident $(as $into:ident)?),* $(,)?) => {
-        #[cfg(unix)]
+        #[cfg(any(unix, target_vendor = "wasmer"))]
         use $crate::os::unix::$($osmod)::+::{$($orig $(as $into)?,)*};
         #[cfg(windows)]
         use $crate::os::windows::$($osmod)::+::{$($orig $(as $into)?,)*};

@@ -9,7 +9,7 @@ macro_rules! dispatch {
         match $var {
             #[cfg(windows)]
             $ty::NamedPipe(arm) => dispatch!(@arm $nm $e),
-            #[cfg(unix)]
+            #[cfg(any(unix, target_vendor = "wasmer"))]
             $ty::UdSocket(arm) => dispatch!(@arm $nm $e),
         }
     }};
@@ -28,8 +28,8 @@ macro_rules! mkenum {
             /// Makes use of Unix domain sockets.
             ///
             /// Click the struct name in the parentheses to learn more.
-            #[cfg(unix)]
-            #[cfg_attr(feature = "doc_cfg", doc(cfg(unix)))]
+            #[cfg(any(unix, target_vendor = "wasmer"))]
+            #[cfg_attr(feature = "doc_cfg", doc(cfg(unix, target_vendor = "wasmer")))]
             UdSocket(uds_impl::$nm),
         }
         impl $crate::Sealed for $nm {}
@@ -40,8 +40,8 @@ macro_rules! mkenum {
                 Self::NamedPipe(x)
             }
         }
-        #[cfg(unix)]
-        #[cfg_attr(feature = "doc_cfg", doc(cfg(unix)))]
+        #[cfg(any(unix, target_vendor = "wasmer"))]
+        #[cfg_attr(feature = "doc_cfg", doc(cfg(unix, target_vendor = "wasmer")))]
         impl From<uds_impl::$nm> for $nm {
             fn from(x: uds_impl::$nm) -> Self {
                 Self::UdSocket(x)

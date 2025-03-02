@@ -114,6 +114,8 @@ widestring = "1.0.2"
 
 [target.'cfg(unix)'.dependencies]
 libc = { version = "0.2.137", features = ["extra_traits"] }
+[target.'cfg(target_vendor = "wasmer")'.dependencies]
+libc = { version = "0.2.169", features = ["extra_traits"] }
 
 [dev-dependencies]
 tokio = { version = "1.36.0", features = [
@@ -144,3 +146,6 @@ targets = [
     "aarch64-apple-darwin",
     "x86_64-unknown-freebsd",
 ]
+
+[patch.crates-io]
+libc = { git = "https://github.com/cristibctr/libc-0.2.169", branch = "wasix-0.2.169" }

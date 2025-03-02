@@ -2,7 +2,7 @@
 use std::{io, os};
 #[cfg(windows)]
 type Handle = os::windows::io::OwnedHandle;
-#[cfg(unix)]
+#[cfg(any(unix, target_vendor = "wasmer"))]
 type Handle = os::unix::io::OwnedFd;
 pub(crate) async fn emain(handle: Handle) -> io::Result<()> {
     //}

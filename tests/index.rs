@@ -3,7 +3,7 @@
 mod util;
 
 mod os {
-    #[cfg(unix)]
+    #[cfg(any(unix, target_vendor = "wasmer"))]
     mod unix {
         mod local_socket_fake_ns;
         mod local_socket_mode;

@@ -8,7 +8,7 @@
     clippy::indexing_slicing,
     clippy::arithmetic_side_effects
 )]
-
+#![feature(unix_socket_abstract)]
 mod platform_check;
 
 // TODO(2.3.0) inspect panic points
@@ -31,8 +31,8 @@ pub mod unnamed_pipe;
 /// default, with which everything platform-specific has a badge next to it which specifies the
 /// `cfg(...)` conditions for that item to be available.
 pub mod os {
-    #[cfg(unix)]
-    #[cfg_attr(feature = "doc_cfg", doc(cfg(unix)))]
+    #[cfg(any(unix, target_vendor = "wasmer"))]
+    #[cfg_attr(feature = "doc_cfg", doc(cfg(unix, target_vendor = "wasmer")))]
     pub mod unix;
     #[cfg(windows)]
     #[cfg_attr(feature = "doc_cfg", doc(cfg(windows)))]

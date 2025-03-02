@@ -7,7 +7,7 @@
 //! The name type you choose affects what local socket implementation will be used. See the
 //! documentation on the tag types to learn more.
 
-#[cfg(unix)]
+#[cfg(any(unix, target_vendor = "wasmer"))]
 use std::ffi::CStr;
 use {
     super::Name,
@@ -83,8 +83,8 @@ impl PathNameType<OsStr> for GenericFilePath {
     #[inline]
     fn map(path: Cow<'_, OsStr>) -> io::Result<Name<'_>> { n_impl::map_generic_path_osstr(path) }
 }
-#[cfg(unix)]
-#[cfg_attr(feature = "doc_cfg", doc(cfg(unix)))]
+#[cfg(any(unix, target_vendor = "wasmer"))]
+#[cfg_attr(feature = "doc_cfg", doc(cfg(unix, target_vendor = "wasmer")))]
 impl PathNameType<CStr> for GenericFilePath {
     #[inline]
     fn map(path: Cow<'_, CStr>) -> io::Result<Name<'_>> { n_impl::map_generic_path_cstr(path) }
@@ -117,8 +117,8 @@ impl NamespacedNameType<OsStr> for GenericNamespaced {
         n_impl::map_generic_namespaced_osstr(name)
     }
 }
-#[cfg(unix)]
-#[cfg_attr(feature = "doc_cfg", doc(cfg(unix)))]
+#[cfg(any(unix, target_vendor = "wasmer"))]
+#[cfg_attr(feature = "doc_cfg", doc(cfg(unix, target_vendor = "wasmer")))]
 impl NamespacedNameType<CStr> for GenericNamespaced {
     #[inline]
     fn map(name: Cow<'_, CStr>) -> io::Result<Name<'_>> {

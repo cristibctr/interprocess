@@ -1,5 +1,5 @@
 use std::borrow::Cow;
-#[cfg(unix)]
+#[cfg(any(unix, target_vendor = "wasmer"))]
 use std::ffi::OsStr;
 #[cfg(windows)]
 use widestring::U16CStr;
@@ -9,9 +9,9 @@ use widestring::U16CStr;
 pub(crate) enum NameInner<'s> {
     #[cfg(windows)]
     NamedPipe(Cow<'s, U16CStr>),
-    #[cfg(unix)]
+    #[cfg(any(unix, target_vendor = "wasmer"))]
     UdSocketPath(Cow<'s, OsStr>),
-    #[cfg(unix)]
+    #[cfg(any(unix, target_vendor = "wasmer"))]
     UdSocketPseudoNs(Cow<'s, OsStr>),
     #[cfg(any(target_os = "linux", target_os = "android"))]
     UdSocketNs(Cow<'s, [u8]>),
@@ -23,7 +23,7 @@ impl Default for NameInner<'_> {
         {
             Self::NamedPipe(Cow::default())
         }
-        #[cfg(unix)]
+        #[cfg(any(unix, target_vendor = "wasmer"))]
         {
             Self::UdSocketPath(Cow::default())
         }
@@ -35,9 +35,9 @@ macro_rules! map_cow {
         match $var {
             #[cfg(windows)]
             NameInner::NamedPipe($nm) => NameInner::NamedPipe($e),
-            #[cfg(unix)]
+            #[cfg(any(unix, target_vendor = "wasmer"))]
             NameInner::UdSocketPath($nm) => NameInner::UdSocketPath($e),
-            #[cfg(unix)]
+            #[cfg(any(unix, target_vendor = "wasmer"))]
             NameInner::UdSocketPseudoNs($nm) => NameInner::UdSocketPseudoNs($e),
             #[cfg(any(target_os = "linux", target_os = "android"))]
             NameInner::UdSocketNs($nm) => NameInner::UdSocketNs($e),
@@ -50,9 +50,9 @@ impl NameInner<'_> {
         match self {
             #[cfg(windows)]
             Self::NamedPipe(..) => true,
-            #[cfg(unix)]
+            #[cfg(any(unix, target_vendor = "wasmer"))]
             Self::UdSocketPath(..) => false,
-            #[cfg(unix)]
+            #[cfg(any(unix, target_vendor = "wasmer"))]
             Self::UdSocketPseudoNs(..) => false,
             #[cfg(any(target_os = "linux", target_os = "android"))]
             Self::UdSocketNs(..) => true,
@@ -62,9 +62,9 @@ impl NameInner<'_> {
         match self {
             #[cfg(windows)]
             Self::NamedPipe(..) => true,
-            #[cfg(unix)]
+            #[cfg(any(unix, target_vendor = "wasmer"))]
             Self::UdSocketPath(..) => true,
-            #[cfg(unix)]
+            #[cfg(any(unix, target_vendor = "wasmer"))]
             Self::UdSocketPseudoNs(..) => false,
             #[cfg(any(target_os = "linux", target_os = "android"))]
             Self::UdSocketNs(..) => false,

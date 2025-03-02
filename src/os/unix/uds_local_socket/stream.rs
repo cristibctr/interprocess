@@ -88,7 +88,7 @@ impl TryClone for Stream {
 
 multimacro! {
     Stream,
-    forward_asinto_handle(unix),
+    forward_asinto_handle,
     derive_sync_mut_rw,
 }
 

@@ -2,7 +2,7 @@
 use std::{io, os, sync::mpsc};
 #[cfg(windows)]
 type Handle = os::windows::io::OwnedHandle;
-#[cfg(unix)]
+#[cfg(any(unix, target_vendor = "wasmer"))]
 type Handle = os::unix::io::OwnedFd;
 pub(crate) fn emain(handle_sender: mpsc::SyncSender<Handle>) -> io::Result<()> {
     //}

@@ -17,9 +17,19 @@ macro_rules! forward_as_handle {
     ($({$($lt:tt)*})? $ty:ty, unix) => {
         forward_as_handle!(@impl $({$($lt)*})? $ty, BorrowedFd, AsFd, as_fd, unix);
     };
+    (@impl $({$($lt:tt)*})? $ty:ty, wasix) => {
+        #[cfg(target_vendor = "wasmer")]
+        impl $(<$($lt)*>)? ::std::os::wasi::io::AsFd for $ty {
+            #[inline]
+            fn as_fd(&self) -> ::std::os::wasi::io::BorrowedFd<'_> {
+                ::std::os::wasi::io::AsFd::as_fd(&self.0)
+            }
+        }
+    };
     ($({$($lt:tt)*})? $ty:ty) => {
         forward_as_handle!($({$($lt)*})? $ty, windows);
         forward_as_handle!($({$($lt)*})? $ty, unix);
+        forward_as_handle!(@impl $({$($lt)*})? $ty, wasix);
     };
 }
 
@@ -39,9 +49,19 @@ macro_rules! forward_into_handle {
     ($({$($lt:tt)*})? $ty:ty, unix) => {
         forward_into_handle!(@impl $({$($lt)*})? $ty, OwnedFd, unix);
     };
+    (@impl $({$($lt:tt)*})? $ty:ty, wasix) => {
+        #[cfg(target_vendor = "wasmer")]
+        impl $(<$($lt)*>)? ::std::convert::From<$ty> for ::std::os::wasi::io::OwnedFd {
+            #[inline]
+            fn from(x: $ty) -> Self {
+                ::std::convert::From::from(x.0)
+            }
+        }
+    };
     ($({$($lt:tt)*})? $ty:ty) => {
         forward_into_handle!($({$($lt)*})? $ty, windows);
         forward_into_handle!($({$($lt)*})? $ty, unix);
+        forward_into_handle!(@impl $({$($lt)*})? $ty, wasix);
     };
 }
 
@@ -61,9 +81,19 @@ macro_rules! forward_from_handle {
     ($({$($lt:tt)*})? $ty:ty, unix) => {
         forward_from_handle!(@impl $({$($lt)*})? $ty, OwnedFd, unix);
     };
+    (@impl $({$($lt:tt)*})? $ty:ty, wasix) => {
+        #[cfg(target_vendor = "wasmer")]
+        impl $(<$($lt)*>)? ::std::convert::From<::std::os::wasi::io::OwnedFd> for $ty {
+            #[inline]
+            fn from(x: ::std::os::wasi::io::OwnedFd) -> Self {
+                Self(::std::convert::From::from(x))
+            }
+        }
+    };
     ($({$($lt:tt)*})? $ty:ty) => {
         forward_from_handle!($({$($lt)*})? $ty, windows);
         forward_from_handle!($({$($lt)*})? $ty, unix);
+        forward_from_handle!(@impl $({$($lt)*})? $ty, wasix);
     };
 }
 
@@ -76,9 +106,14 @@ macro_rules! forward_asinto_handle {
         forward_as_handle!($({$($lt)*})? $ty, unix);
         forward_into_handle!($({$($lt)*})? $ty, unix);
     };
+    ($({$($lt:tt)*})? $ty:ty, wasix) => {
+        forward_as_handle!(@impl $({$($lt)*})? $ty, wasix);
+        forward_into_handle!(@impl $({$($lt)*})? $ty, wasix);
+    };
     ($({$($lt:tt)*})? $ty:ty) => {
         forward_asinto_handle!($({$($lt)*})? $ty, windows);
         forward_asinto_handle!($({$($lt)*})? $ty, unix);
+        forward_asinto_handle!($({$($lt)*})? $ty, wasix);
     };
 }
 
@@ -91,9 +126,14 @@ macro_rules! forward_handle {
         forward_asinto_handle!($({$($lt)*})? $ty, unix);
         forward_from_handle!($({$($lt)*})? $ty, unix);
     };
+    ($({$($lt:tt)*})? $ty:ty, wasix) => {
+        forward_asinto_handle!($({$($lt)*})? $ty, wasix);
+        forward_from_handle!(@impl $({$($lt)*})? $ty, wasix);
+    };
     ($({$($lt:tt)*})? $ty:ty) => {
         forward_handle!($({$($lt)*})? $ty, windows);
         forward_handle!($({$($lt)*})? $ty, unix);
+        forward_handle!($({$($lt)*})? $ty, wasix);
     };
 }
 

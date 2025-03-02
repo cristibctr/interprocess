@@ -1,4 +1,4 @@
-#[cfg(any(not(any(windows, unix)), target_os = "emscripten"))]
+#[cfg(any(not(any(windows, unix, target_vendor = "wasmer")), target_os = "emscripten"))]
 compile_error!(
     "Your target operating system is not supported by interprocess – check if yours is in the list \
 of supported systems, and if not, please open an issue on the GitHub repository if you think that \

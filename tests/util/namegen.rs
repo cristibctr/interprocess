@@ -29,7 +29,7 @@ pub fn namegen_local_socket(
 fn next_fs(rn: u32) -> io::Result<Name<'static>> {
     if cfg!(windows) {
         windows_path(rn)
-    } else if cfg!(unix) {
+    } else if cfg!(any(unix, target_vendor = "wasmer")) {
         unix_path(rn)
     } else {
         unreachable!()

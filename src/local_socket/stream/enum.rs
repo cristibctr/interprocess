@@ -1,4 +1,4 @@
-#[cfg(unix)]
+#[cfg(any(unix, target_vendor = "wasmer"))]
 use crate::os::unix::uds_local_socket as uds_impl;
 #[cfg(windows)]
 use crate::os::windows::named_pipe::local_socket as np_impl;
@@ -85,7 +85,7 @@ impl r#trait::Stream for Stream {
                 let (rh, sh) = s.split();
                 (RecvHalf::NamedPipe(rh), SendHalf::NamedPipe(sh))
             }
-            #[cfg(unix)]
+            #[cfg(any(unix, target_vendor = "wasmer"))]
             Stream::UdSocket(s) => {
                 let (rh, sh) = s.split();
                 (RecvHalf::UdSocket(rh), SendHalf::UdSocket(sh))
@@ -98,7 +98,7 @@ impl r#trait::Stream for Stream {
             (RecvHalf::NamedPipe(rh), SendHalf::NamedPipe(sh)) => {
                 np_impl::Stream::reunite(rh, sh).map(From::from).map_err(|e| e.convert_halves())
             }
-            #[cfg(unix)]
+            #[cfg(any(unix, target_vendor = "wasmer"))]
             (RecvHalf::UdSocket(rh), SendHalf::UdSocket(sh)) => {
                 uds_impl::Stream::reunite(rh, sh).map(From::from).map_err(|e| e.convert_halves())
             }

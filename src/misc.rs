@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-#[cfg(unix)]
+#[cfg(any(unix, target_vendor = "wasmer"))]
 use std::os::unix::io::RawFd;
 use std::{
     io,
@@ -48,11 +48,11 @@ impl<B: ToBool, T> OrErrno<T> for B {
     }
 }
 
-#[cfg(unix)]
+#[cfg(any(unix, target_vendor = "wasmer"))]
 pub(crate) trait FdOrErrno: Sized {
     fn fd_or_errno(self) -> io::Result<Self>;
 }
-#[cfg(unix)]
+#[cfg(any(unix, target_vendor = "wasmer"))]
 impl FdOrErrno for RawFd {
     #[inline]
     fn fd_or_errno(self) -> io::Result<Self> { (self != -1).true_val_or_errno(self) }

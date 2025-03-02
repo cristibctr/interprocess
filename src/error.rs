@@ -152,8 +152,8 @@ impl Display for NoDetails {
 pub type FromHandleError<E = NoDetails> = ConversionError<std::os::windows::io::OwnedHandle, E>;
 
 /// Error type of `TryFrom<OwnedFd>` conversions.
-#[cfg(unix)]
-#[cfg_attr(feature = "doc_cfg", doc(cfg(unix)))]
+#[cfg(any(unix, target_vendor = "wasmer"))]
+#[cfg_attr(feature = "doc_cfg", doc(cfg(unix, target_vendor = "wasmer")))]
 pub type FromFdError<E = NoDetails> = ConversionError<std::os::unix::io::OwnedFd, E>;
 
 /// Error type of `.reunite()` on splittable stream types, indicating that the two halves belong to

@@ -1,4 +1,4 @@
-#[cfg(unix)]
+#[cfg(any(unix, target_vendor = "wasmer"))]
 use crate::os::unix::uds_local_socket::tokio as uds_impl;
 #[cfg(windows)]
 use crate::os::windows::named_pipe::local_socket::tokio as np_impl;
