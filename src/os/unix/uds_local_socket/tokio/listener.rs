@@ -12,11 +12,16 @@ use {
         io,
         os::unix::prelude::*,
     },
-    tokio::net::UnixListener,
 };
-
+#[cfg(unix)]
+use tokio::net::UnixListener;
+#[cfg(target_vendor = "wasmer")]
+use tokio::net::TcpListener;
 pub struct Listener {
+    #[cfg(not(target_vendor = "wasmer"))]
     listener: UnixListener,
+    #[cfg(target_vendor = "wasmer")]
+    listener: TcpListener,
     reclaim: ReclaimGuard,
 }
 impl Sealed for Listener {}
@@ -29,7 +34,13 @@ impl traits::Listener for Listener {
             .create_sync_as::<SyncListener>()
             .and_then(|mut sync| {
                 let reclaim = sync.reclaim.take();
-                Ok(Self { listener: UnixListener::from_std(sync.into())?, reclaim })
+                Ok(Self {
+                    #[cfg(not(target_vendor = "wasmer"))]
+                    listener: UnixListener::from_std(sync.into())?,
+                    #[cfg(target_vendor = "wasmer")]
+                    listener: TcpListener::from_std(sync.into())?,
+                    reclaim
+                })
             })
     }
     async fn accept(&self) -> io::Result<Stream> {
@@ -48,7 +59,13 @@ impl TryFrom<SyncListener> for Listener {
     fn try_from(mut sync: SyncListener) -> io::Result<Self> {
         sync.set_nonblocking(ListenerNonblockingMode::Both)?;
         let reclaim = sync.reclaim.take();
-        Ok(Self { listener: UnixListener::from_std(sync.into())?, reclaim })
+        Ok(Self {
+            #[cfg(not(target_vendor = "wasmer"))]
+            listener: UnixListener::from_std(sync.into())?,
+            #[cfg(target_vendor = "wasmer")]
+            listener: TcpListener::from_std(sync.into())?,
+            reclaim
+        })
     }
 }
 

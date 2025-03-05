@@ -12,9 +12,12 @@ use {
         pin::Pin,
         task::{ready, Context, Poll},
     },
-    tokio::io::{unix::AsyncFd, AsyncRead, AsyncWrite, Interest, ReadBuf, Ready},
+    tokio::io::{AsyncRead, AsyncWrite, Interest, ReadBuf, Ready},
 };
-
+#[cfg(not(target_vendor = "wasmer"))]
+use tokio::io::unix::AsyncFd;
+#[cfg(target_vendor = "wasmer")]
+use tokio::io::unix::AsyncFd;
 type RecverImpl = AsyncFd<FdOps>;
 type SenderImpl = AsyncFd<FdOps>;
 

@@ -156,12 +156,12 @@ dependencies = [
 
 [[package]]
 name = "mio"
-version = "1.0.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2886843bf800fba2e3377cff24abf6379b4c4d5c6681eaf9ea5b0d15090450bd"
+version = "1.0.1"
+source = "git+https://github.com/cristibctr/mio.git?branch=v1.0.1#110a147bb506d76b74c94d66892b278d13f1c083"
 dependencies = [
  "libc",
  "wasi",
+ "wasix",
  "windows-sys",
 ]
 
@@ -239,9 +239,8 @@ checksum = "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64"
 
 [[package]]
 name = "socket2"
-version = "0.5.8"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c970269d99b64e60ec3bd6ad27270092a5394c4e309314b18ae3fe575695fbe8"
+version = "0.6.0"
+source = "git+https://github.com/cristibctr/socket2.git?branch=v0.6.0#42fcdc8ae90ae3fcf0d9170b6b63669d8a9879e5"
 dependencies = [
  "libc",
  "windows-sys",
@@ -270,9 +269,8 @@ dependencies = [
 
 [[package]]
 name = "tokio"
-version = "1.43.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3d61fa4ffa3de412bfea335c6ecff681de2b609ba3c77ef3e00e521813a9ed9e"
+version = "1.41.1"
+source = "git+https://github.com/cristibctr/tokio-wasix?branch=wasix-1.41.1#54867be67d3ebd6c4973c6b42f5c82158fe4998f"
 dependencies = [
  "backtrace",
  "bytes",
@@ -286,9 +284,8 @@ dependencies = [
 
 [[package]]
 name = "tokio-macros"
-version = "2.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6e06d43f1345a3bcd39f6a56dbb7dcab2ba47e68e8ac134855e7e2bdbaf8cab8"
+version = "2.4.0"
+source = "git+https://github.com/cristibctr/tokio-wasix?branch=wasix-1.41.1#54867be67d3ebd6c4973c6b42f5c82158fe4998f"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -353,6 +350,15 @@ name = "wasi"
 version = "0.11.0+wasi-snapshot-preview1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9c8d87e72b64a3b4db28d11ce29237c246188f4f51057d65a7eab63b7987e423"
+
+[[package]]
+name = "wasix"
+version = "0.12.21"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c1fbb4ef9bbca0c1170e0b00dd28abc9e3b68669821600cad1caaed606583c6d"
+dependencies = [
+ "wasi",
+]
 
 [[package]]
 name = "widestring"

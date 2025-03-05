@@ -79,7 +79,7 @@ doc_cfg = []
 
 [dependencies]
 doctest-file = "1.0.0"
-tokio = { version = "1.36.0", features = [
+tokio = { version = "1.41.1", features = [
     "sync",
     "rt",
     "net",
@@ -101,7 +101,7 @@ windows-sys = { version = "0.52.0", features = [
     "Win32_System_SystemServices",
     "Win32_System_LibraryLoader",
 ] }
-tokio = { version = "1.36.0", features = [
+tokio = { version = "1.41.1", features = [
     "sync",
     "rt-multi-thread",
     "fs",
@@ -118,7 +118,7 @@ libc = { version = "0.2.137", features = ["extra_traits"] }
 libc = { version = "0.2.169", features = ["extra_traits"] }
 
 [dev-dependencies]
-tokio = { version = "1.36.0", features = [
+tokio = { version = "1.41.1", features = [
     "sync",
     "rt-multi-thread",
     "io-util",
@@ -149,3 +149,4 @@ targets = [
 
 [patch.crates-io]
 libc = { git = "https://github.com/cristibctr/libc-0.2.169", branch = "wasix-0.2.169" }
+tokio = { git = "https://github.com/cristibctr/tokio-wasix", branch = "wasix-1.41.1" }

@@ -19,11 +19,17 @@ use {
     },
     tokio::{
         io::{AsyncRead, AsyncWrite, ReadBuf},
-        net::{
-            unix::{OwnedReadHalf as RecvHalfImpl, OwnedWriteHalf as SendHalfImpl},
-            UnixStream,
-        },
     },
+};
+#[cfg(not(target_vendor = "wasmer"))]
+use {
+    tokio::net::unix::{OwnedReadHalf as RecvHalfImpl, OwnedWriteHalf as SendHalfImpl},
+    tokio::net::UnixStream,
+};
+#[cfg(target_vendor = "wasmer")]
+use {
+    tokio::net::tcp::{OwnedReadHalf as RecvHalfImpl, OwnedWriteHalf as SendHalfImpl},
+    tokio::net::TcpStream,
 };
 
 #[derive(Debug)]
@@ -66,9 +72,18 @@ impl traits::Stream for Stream {
     }
     #[inline]
     fn reunite(rh: RecvHalf, sh: SendHalf) -> Result<Self, ReuniteError<RecvHalf, SendHalf>> {
-        rh.0.reunite(sh.0).map(Self::from).map_err(|tokio::net::unix::ReuniteError(rh, sh)| {
-            ReuniteError { rh: RecvHalf(rh), sh: SendHalf(sh) }
-        })
+        #[cfg(not(target_vendor = "wasmer"))]
+        {
+            rh.0.reunite(sh.0).map(Self::from).map_err(|tokio::net::unix::ReuniteError(rh, sh)| {
+                ReuniteError { rh: RecvHalf(rh), sh: SendHalf(sh) }
+            })
+        }
+        #[cfg(target_vendor = "wasmer")]
+        {
+            rh.0.reunite(sh.0).map(Self::from).map_err(|tokio::net::tcp::ReuniteError(rh, sh)| {
+                ReuniteError { rh: RecvHalf(rh), sh: SendHalf(sh) }
+            })
+        }
     }
 }
 
