@@ -17,7 +17,7 @@ use {
 #[cfg(not(target_vendor = "wasmer"))]
 use tokio::io::unix::AsyncFd;
 #[cfg(target_vendor = "wasmer")]
-use tokio::io::unix::AsyncFd;
+use tokio::io::wasi::AsyncFd;
 type RecverImpl = AsyncFd<FdOps>;
 type SenderImpl = AsyncFd<FdOps>;
 
