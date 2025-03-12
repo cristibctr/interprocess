@@ -29,7 +29,7 @@ use {
 #[cfg(target_vendor = "wasmer")]
 use {
     tokio::net::tcp::{OwnedReadHalf as RecvHalfImpl, OwnedWriteHalf as SendHalfImpl},
-    tokio::net::TcpStream,
+    tokio::net::TcpStream as UnixStream,
 };
 
 #[derive(Debug)]
@@ -55,7 +55,7 @@ impl Stream {
                 .try_into();
             }
         }
-        UnixStream::connect(addr.as_pathname().unwrap()).await
+        UnixStream::connect(addr).await
     }
 }
 
