@@ -30,11 +30,7 @@ macro_rules! derive_asraw {
             RawFd, AsRawFd, as_raw_fd,
             AsFd, as_fd, unix);
     };
-    (@impl
-        $({$($forcl:tt)*})?
-        $ty:ty,
-        $hty:ident, $trt:ident, $mtd:ident,
-        $strt:ident, $smtd:ident, wasix) => {
+    (@impl $({$($forcl:tt)*})? $ty:ty, wasix) => {
         #[cfg(target_vendor = "wasmer")]
         impl $(<$($forcl)*>)? ::std::os::wasi::io::$trt for $ty {
             #[inline]
@@ -80,11 +76,7 @@ macro_rules! derive_intoraw {
             RawFd, OwnedFd,
             IntoRawFd, into_raw_fd, unix);
     };
-    (@impl
-        $({$($forcl:tt)*})?
-        $ty:ty,
-        $hty:ident, $ohty:ident,
-        $trt:ident, $mtd:ident, wasix) => {
+    (@impl $({$($forcl:tt)*})? $ty:ty, wasix) => {
         #[cfg(target_vendor = "wasmer")]
         impl $(<$($forcl)*>)? ::std::os::wasi::io::$trt for $ty {
             #[inline]
@@ -150,11 +142,7 @@ macro_rules! derive_fromraw {
             RawFd, OwnedFd,
             FromRawFd, from_raw_fd, unix);
     };
-    (@impl
-        $({$($forcl:tt)*})?
-        $ty:ty,
-        $hty:ident, $ohty:ident,
-        $trt:ident, $mtd:ident, wasix) => {
+    (@impl $({$($forcl:tt)*})? $ty:ty, wasix) => {
         #[cfg(target_vendor = "wasmer")]
         impl $(<$($forcl)*>)? ::std::os::wasi::io::$trt for $ty {
             #[inline]
