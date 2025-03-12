@@ -22,10 +22,10 @@ macro_rules! forward_as_handle {
     };
     (@impl $({$($lt:tt)*})? $ty:ty, $hty:ident, $trt:ident, $mtd:ident, wasix) => {
         #[cfg(target_vendor = "wasmer")]
-        impl $(<$($lt)*>)? ::std::os::wasi::io::$trt for $ty {
+        impl $(<$($lt)*>)? ::std::os::fd::io::$trt for $ty {
             #[inline]
-            fn $mtd(&self) -> ::std::os::wasi::io::$hty<'_> {
-                ::std::os::wasi::io::$trt::$mtd(&self.0)
+            fn $mtd(&self) -> ::std::os::fd::io::$hty<'_> {
+                ::std::os::fd::io::$trt::$mtd(&self.0)
             }
         }
     };
