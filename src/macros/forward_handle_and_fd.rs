@@ -18,14 +18,14 @@ macro_rules! forward_as_handle {
         forward_as_handle!(@impl $({$($lt)*})? $ty, BorrowedFd, AsFd, as_fd, unix);
     };
     ($({$($lt:tt)*})? $ty:ty, wasix) => {
-        forward_as_handle!(@impl $({$($lt)*})? $ty, BorrowedFd, AsFd, as_fd, wasix);
+        forward_as_handle!(@impl $({$($lt)*})? $ty, BorrowedFd, AsFd, as_fd, ignored, wasix);
     };
-    (@impl $({$($lt:tt)*})? $ty:ty, $hty:ident, $trt:ident, $mtd:ident, wasix) => {
+    (@impl $({$($lt:tt)*})? $ty:ty, $hty:ident, $trt:ident, $mtd:ident, $_:ident, wasix) => {
         #[cfg(target_vendor = "wasmer")]
-        impl $(<$($lt)*>)? ::std::os::fd::$trt for $ty {
+        impl $(<$($lt)*>)? ::std::os::wasi::io::$trt for $ty {
             #[inline]
-            fn $mtd(&self) -> ::std::os::fd::$hty<'_> {
-                ::std::os::fd::$trt::$mtd(&self.0)
+            fn $mtd(&self) -> ::std::os::wasi::io::$hty<'_> {
+                ::std::os::wasi::io::$trt::$mtd(&self.0)
             }
         }
     };
