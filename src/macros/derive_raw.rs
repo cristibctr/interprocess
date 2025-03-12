@@ -30,6 +30,20 @@ macro_rules! derive_asraw {
             RawFd, AsRawFd, as_raw_fd,
             AsFd, as_fd, unix);
     };
+    (@impl
+        $({$($forcl:tt)*})?
+        $ty:ty,
+        $hty:ident, $trt:ident, $mtd:ident,
+        $strt:ident, $smtd:ident, wasix) => {
+        #[cfg(target_vendor = "wasmer")]
+        impl $(<$($forcl)*>)? ::std::os::wasi::io::$trt for $ty {
+            #[inline]
+            fn $mtd(&self) -> ::std::os::wasi::io::$hty {
+                let h = ::std::os::wasi::io::$strt::$smtd(self);
+                ::std::os::wasi::io::$trt::$mtd(&h)
+            }
+        }
+    };
     ($({$($forcl:tt)*})? $ty:ty) => {
         derive_asraw!($({$($forcl)*})? $ty, windows);
         derive_asraw!($({$($forcl)*})? $ty, unix);
@@ -65,9 +79,24 @@ macro_rules! derive_intoraw {
             RawFd, OwnedFd,
             IntoRawFd, into_raw_fd, unix);
     };
+    (@impl
+        $({$($forcl:tt)*})?
+        $ty:ty,
+        $hty:ident, $ohty:ident,
+        $trt:ident, $mtd:ident, wasix) => {
+        #[cfg(target_vendor = "wasmer")]
+        impl $(<$($forcl)*>)? ::std::os::wasi::io::$trt for $ty {
+            #[inline]
+            fn $mtd(self) -> ::std::os::wasi::io::$hty {
+                let h = <std::os::wasi::io::$ohty as ::std::convert::From<_>>::from(self);
+                ::std::os::wasi::io::$trt::$mtd(h)
+            }
+        }
+    };
     ($({$($forcl:tt)*})? $ty:ty) => {
         derive_intoraw!($({$($forcl)*})? $ty, windows);
         derive_intoraw!($({$($forcl)*})? $ty, unix);
+        derive_intoraw!($({$($forcl)*})? $ty, wasix);
     };
 }
 
@@ -80,9 +109,14 @@ macro_rules! derive_asintoraw {
         derive_asraw!($({$($forcl)*})? $ty, unix);
         derive_intoraw!($({$($forcl)*})? $ty, unix);
     };
+    ($({$($forcl:tt)*})? $ty:ty, wasix) => {
+        derive_asraw!($({$($forcl)*})? $ty, wasix);
+        derive_intoraw!($({$($forcl)*})? $ty, wasix);
+    };
     ($({$($forcl:tt)*})? $ty:ty) => {
         derive_asintoraw!($({$($forcl)*})? $ty, windows);
         derive_asintoraw!($({$($forcl)*})? $ty, unix);
+        derive_asintoraw!($({$($forcl)*})? $ty, wasix);
     };
 }
 
@@ -115,9 +149,24 @@ macro_rules! derive_fromraw {
             RawFd, OwnedFd,
             FromRawFd, from_raw_fd, unix);
     };
+    (@impl
+        $({$($forcl:tt)*})?
+        $ty:ty,
+        $hty:ident, $ohty:ident,
+        $trt:ident, $mtd:ident, wasix) => {
+        #[cfg(target_vendor = "wasmer")]
+        impl $(<$($forcl)*>)? ::std::os::wasi::io::$trt for $ty {
+            #[inline]
+            unsafe fn $mtd(fd: ::std::os::wasi::io::$hty) -> Self {
+                let h: ::std::os::wasi::io::$ohty = unsafe { ::std::os::wasi::io::$trt::$mtd(fd) };
+                ::std::convert::From::from(h)
+            }
+        }
+    };
     ($({$($forcl:tt)*})? $ty:ty) => {
         derive_fromraw!($({$($forcl)*})? $ty, windows);
         derive_fromraw!($({$($forcl)*})? $ty, unix);
+        derive_fromraw!($({$($forcl)*})? $ty, wasix);
     };
 }
 
@@ -129,6 +178,10 @@ macro_rules! derive_raw {
     ($({$($forcl:tt)*})? $ty:ty, unix) => {
         derive_asintoraw!($({$($forcl)*})? $ty, unix);
         derive_fromraw!($({$($forcl)*})? $ty, unix);
+    };
+    ($({$($forcl:tt)*})? $ty:ty, wasix) => {
+        derive_asintoraw!($({$($forcl)*})? $ty, wasix);
+        derive_fromraw!($({$($forcl)*})? $ty, wasix);
     };
     ($({$($forcl:tt)*})? $ty:ty) => {
         derive_asintoraw!($({$($forcl)*})? $ty);
