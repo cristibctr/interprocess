@@ -12,11 +12,14 @@ use {
         iter::FusedIterator,
         os::{
             fd::{AsFd, BorrowedFd, OwnedFd},
-            unix::net::UnixListener,
         },
         sync::atomic::{AtomicBool, Ordering::SeqCst},
     },
 };
+#[cfg(unix)]
+use std::os::unix::net::UnixListener;
+#[cfg(target_vendor = "wasmer")]
+use std::os::wasi::net::UnixListener;
 
 /// Wrapper around [`UnixListener`] that implements
 /// [`Listener`](crate::local_socket::traits::Listener).

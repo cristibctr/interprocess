@@ -12,16 +12,10 @@ use {
         io,
         os::unix::prelude::*,
     },
+    tokio::net::UnixListener,
 };
-#[cfg(unix)]
-use tokio::net::UnixListener;
-#[cfg(target_vendor = "wasmer")]
-use tokio::net::TcpListener;
 pub struct Listener {
-    #[cfg(not(target_vendor = "wasmer"))]
     listener: UnixListener,
-    #[cfg(target_vendor = "wasmer")]
-    listener: TcpListener,
     reclaim: ReclaimGuard,
 }
 impl Sealed for Listener {}
@@ -35,10 +29,7 @@ impl traits::Listener for Listener {
             .and_then(|mut sync| {
                 let reclaim = sync.reclaim.take();
                 Ok(Self {
-                    #[cfg(not(target_vendor = "wasmer"))]
                     listener: UnixListener::from_std(sync.into())?,
-                    #[cfg(target_vendor = "wasmer")]
-                    listener: TcpListener::from_std(sync.into())?,
                     reclaim
                 })
             })
@@ -60,10 +51,7 @@ impl TryFrom<SyncListener> for Listener {
         sync.set_nonblocking(ListenerNonblockingMode::Both)?;
         let reclaim = sync.reclaim.take();
         Ok(Self {
-            #[cfg(not(target_vendor = "wasmer"))]
             listener: UnixListener::from_std(sync.into())?,
-            #[cfg(target_vendor = "wasmer")]
-            listener: TcpListener::from_std(sync.into())?,
             reclaim
         })
     }
