@@ -270,7 +270,7 @@ dependencies = [
 [[package]]
 name = "tokio"
 version = "1.41.1"
-source = "git+https://github.com/cristibctr/tokio-wasix?branch=wasix-1.41.1#a66fa2a8c6f9cd0f18ca32e778fa122abc07b6bf"
+source = "git+https://github.com/cristibctr/tokio-wasix?branch=wasix-1.41.1#11c74805fd1e1ae1918c6eb5e3917a7a158b0918"
 dependencies = [
  "backtrace",
  "bytes",
@@ -285,7 +285,7 @@ dependencies = [
 [[package]]
 name = "tokio-macros"
 version = "2.4.0"
-source = "git+https://github.com/cristibctr/tokio-wasix?branch=wasix-1.41.1#a66fa2a8c6f9cd0f18ca32e778fa122abc07b6bf"
+source = "git+https://github.com/cristibctr/tokio-wasix?branch=wasix-1.41.1#530216e1a9be6416db2baa0e8e010253bd1907b7"
 dependencies = [
  "proc-macro2",
  "quote",
