@@ -164,7 +164,7 @@ macro_rules! derive_fromraw {
             RawFd, OwnedFd,
             FromRawFd, from_raw_fd, unix);
     };
-    (({$($forcl:tt)*})? $ty:ty, wasix) => {
+    ($({$($forcl:tt)*})? $ty:ty, wasix) => {
         derive_fromraw!(
             @impl
             $({$($forcl)*})? $ty,
