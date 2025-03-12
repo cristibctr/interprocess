@@ -47,6 +47,7 @@ macro_rules! derive_asraw {
     ($({$($forcl:tt)*})? $ty:ty) => {
         derive_asraw!($({$($forcl)*})? $ty, windows);
         derive_asraw!($({$($forcl)*})? $ty, unix);
+        derive_asraw!($({$($forcl)*})? $ty, wasix);
     };
 }
 
