@@ -53,9 +53,9 @@ macro_rules! forward_into_handle {
         forward_into_handle!(@impl $({$($lt)*})? $ty, OwnedFd, unix);
     };
     ($({$($lt:tt)*})? $ty:ty, wasix) => {
-        forward_into_handle!(@impl $({$($lt)*})? $ty, OwnedFd, wasix);
+        forward_into_handle!(@impl $({$($lt)*})? $ty, OwnedFd, ignored, wasix);
     };
-    (@impl $({$($lt:tt)*})? $ty:ty, $hty:ident, wasix) => {
+    (@impl $({$($lt:tt)*})? $ty:ty, $hty:ident, $_:ident, wasix) => {
         #[cfg(target_vendor = "wasmer")]
         impl $(<$($lt)*>)? ::std::convert::From<$ty> for ::std::os::wasi::io::$hty {
             #[inline]
@@ -88,9 +88,9 @@ macro_rules! forward_from_handle {
         forward_from_handle!(@impl $({$($lt)*})? $ty, OwnedFd, unix);
     };
     ($({$($lt:tt)*})? $ty:ty, wasix) => {
-        forward_from_handle!(@impl $({$($lt)*})? $ty, OwnedFd, wasix);
+        forward_from_handle!(@impl $({$($lt)*})? $ty, OwnedFd, ignored, wasix);
     };
-    (@impl $({$($lt:tt)*})? $ty:ty, $hty:ident, wasix) => {
+    (@impl $({$($lt:tt)*})? $ty:ty, $hty:ident, $_:ident, wasix) => {
         #[cfg(target_vendor = "wasmer")]
         impl $(<$($lt)*>)? ::std::convert::From<::std::os::wasi::io::$hty> for $ty {
             #[inline]
