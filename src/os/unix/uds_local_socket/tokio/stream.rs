@@ -55,7 +55,7 @@ impl Stream {
                 .try_into();
             }
         }
-        UnixStream::connect(addr).await
+        UnixStream::connect(addr.as_pathname().unwrap().as_os_str().to_str().unwrap()).await
     }
 }
 
