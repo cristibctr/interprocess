@@ -79,7 +79,7 @@ doc_cfg = []
 
 [dependencies]
 doctest-file = "1.0.0"
-tokio = { version = "1.41.1", features = [
+tokio = { version = "=1.41.1", features = [
     "sync",
     "rt",
     "net",
@@ -113,12 +113,12 @@ recvmsg = "1.0.0"
 widestring = "1.0.2"
 
 [target.'cfg(unix)'.dependencies]
-libc = { version = "0.2.137", features = ["extra_traits"] }
+libc = { git = "https://github.com/cristibctr/libc-0.2.169", branch = "wasix-0.2.169", features = ["extra_traits"] }
 [target.'cfg(target_vendor = "wasmer")'.dependencies]
-libc = { version = "0.2.169", features = ["extra_traits"] }
+libc = { git = "https://github.com/cristibctr/libc-0.2.169", branch = "wasix-0.2.169", features = ["extra_traits"] }
 
 [dev-dependencies]
-tokio = { version = "1.41.1", features = [
+tokio = { version = "=1.41.1", features = [
     "sync",
     "rt-multi-thread",
     "io-util",
